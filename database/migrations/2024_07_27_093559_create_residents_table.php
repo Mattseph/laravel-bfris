@@ -12,10 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('residents', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->text('address');
+            $table->bigIncrements('resident_id');
+            $table->string('lastname');
+            $table->string('firstname');
+            $table->string('midname')->nullable();
+            $table->string('suffix')->nullable();
+            $table->string('sex');
+            $table->date('date_of_birth');
+            $table->string('place_of_birth');
+            $table->string('civil_status');
             $table->string('nationality');
+            $table->string('occupation');
+            $table->string('religion');
+            $table->string('blood_type')->nullable();
+            $table->string('educational_attainment');
+            $table->string('phone_number');
+            $table->string('tel_number')->nullable();
+            $table->string('email')->nullable()->unique();
+            $table->string('purok');
+            $table->string('barangay');
+            $table->string('city');
+            $table->string('province');
+            $table->string('fourps_status');
+            $table->date('date_of_death');
             $table->string('image')->nullable();
             $table->timestamps();
         });
