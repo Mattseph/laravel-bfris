@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Disablility extends Model
+class Disability extends Model
 {
     use HasFactory;
 
@@ -13,5 +13,10 @@ class Disablility extends Model
         'disability_status',
         'disability_type',
     ];
+
+    public function resident ()
+    {
+        return $this->belongsTo(Resident::class);
+    }
 
 }
