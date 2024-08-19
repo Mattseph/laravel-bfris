@@ -34,4 +34,26 @@ class Resident extends Model
         'date_of_death',
         'image',
     ];
+
+
+    public function disability()
+    {
+        return $this->hasOne(Disability::class);
+    }
+
+    public function vaccination()
+    {
+        return $this->hasOne(Vaccination::class);
+    }
+
+    public function voter()
+    {
+        return $this->hasOne(Voter::class);
+    }
+
+    public function emergency_contact()
+    {
+        return $this->hasOne(Voter::class);
+    }
+
 }
