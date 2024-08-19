@@ -14,4 +14,10 @@ class Voter extends Model
         'voter_id',
         'precinct',
     ];
+
+    public function resident ()
+    {
+        return $this->belongsTo(Resident::class);
+    }
+
 }

@@ -21,4 +21,10 @@ class Vaccination extends Model
         'booster_2',
         'booster_2_date',
     ];
+
+    public function resident ()
+    {
+        return $this->belongsTo(Resident::class);
+    }
+
 }

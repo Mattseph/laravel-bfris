@@ -9,12 +9,16 @@ class EmergencyContact extends Model
 {
     use HasFactory;
 
-    protected $table = 'EmergencyContact';
-
     protected $fillable = [
         'name',
         'relationship',
         'address',
         'contact',
     ];
+
+    public function resident ()
+    {
+        return $this->belongsTo(Resident::class);
+    }
+
 }
