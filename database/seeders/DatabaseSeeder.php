@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Resident::factory(20)->create();
+        Resident::factory(20)->create([
+            'image' => 'uploads/default-img.svg'
+        ]);
     }
 }
