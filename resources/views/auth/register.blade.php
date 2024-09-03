@@ -49,6 +49,10 @@
                                 <option value="Administrator">Administrator</option>
                                 <option value="Barangay Captain">Barangay Captain</option>
                                 <option value="Barangay Secretary">Barangay Secretary</option>
+                                <option value="Resident Admin">Resident Admin</option>
+                                <option value="Resident Encoder">Resident Encoder</option>
+                                <option value="Certificate Encoder">Certificate Encoder</option>
+                                <option value="Certificate Admin">Certificate Admin</option>
                              </select>
 
                                 @error('name')
