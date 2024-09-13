@@ -20,7 +20,7 @@ return new class extends Migration
                 ->on('residents')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('voter_status');
+            $table->boolean('is_voter');
             $table->string('precinct')->nullable();
             $table->timestamps();
         });
