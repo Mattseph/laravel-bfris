@@ -33,8 +33,9 @@ return new class extends Migration
             $table->string('barangay');
             $table->string('city');
             $table->string('province');
-            $table->string('fourps_status');
-            $table->date('date_of_death');
+            $table->boolean('is_fourps')->default(false);
+            $table->boolean('is_deceased')->default(false);
+            $table->date('date_of_death')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

@@ -19,12 +19,12 @@ return new class extends Migration
                 ->on('residents')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('vaccine_status');
+            $table->boolean('is_vaccinated');
             $table->string('vaccine_1')->nullable();
             $table->date('vaccine_1_date')->nullable();
             $table->string('vaccine_2')->nullable();
             $table->date('vaccine_2_date')->nullable();
-            $table->string('booster_status');
+            $table->boolean('is_boostered')->nullable();
             $table->string('booster_1')->nullable();
             $table->date('booster_1_date')->nullable();
             $table->string('booster_2')->nullable();

@@ -10,7 +10,8 @@ class Disability extends Model
     use HasFactory;
 
     protected $fillable = [
-        'disability_status',
+        'resident_id',
+        'is_disabled',
         'disability_type',
     ];
 

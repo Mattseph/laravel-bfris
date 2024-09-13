@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Resident;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ResidentFactory extends Factory
 {
+
+    protected $model = Resident::class;
     /**
      * Define the model's default state.
      *
@@ -22,15 +25,15 @@ class ResidentFactory extends Factory
             'firstname' => fake()->firstName(),
             'midname' => fake()->lastName(),
             'suffix' => fake()->suffix(),
-            'sex' => fake()->suffix(),
+            'sex' => fake()->randomElement(['Male', 'Female']),
             'date_of_birth' => fake()->date($format = 'Y-m-d', $max = 'now'),
             'place_of_birth' => fake()->city(),
             'civil_status' => fake()->realText($maxNbChars = 10, $indexSize = 2),
             'nationality' => fake()->country(),
             'occupation' => fake()->jobTitle(),
-            'religion' => fake()->lastName(),
-            'blood_type' => fake()->jobTitle(),
-            'educational_attainment' => fake()->jobTitle(),
+            'religion' => fake()->randomElement(['Roman Catholic', 'Iglesia ni Kristo', 'Islam']),
+            'blood_type' => fake()->randomElement(['O+', 'O', 'A-', 'A+']),
+            'educational_attainment' => fake()->randomElement(['College Graduate', 'College Undergraduate', 'High School Graduate', 'High School Undergraduate']),
             'phone_number' => fake()->unique()->phoneNumber(),
             'tel_number' => fake()->unique()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
@@ -38,7 +41,8 @@ class ResidentFactory extends Factory
             'barangay' => fake()->secondaryAddress(),
             'city' => fake()->city(),
             'province' => fake()->state(),
-            'fourps_status' => fake()->realText($maxNbChars = 10, $indexSize = 2),
+            'is_fourps' => fake()->boolean(),
+            'is_deceased' => fake()->boolean(),
             'date_of_death' => fake()->date($format = 'Y-m-d', $max = 'now'),
             'image' => fake()->imageUrl($width = 640, $height = 480),
         ];
