@@ -10,12 +10,13 @@ class Vaccination extends Model
     use HasFactory;
 
     protected $fillable = [
-        'vaccine_status',
+        'resident_id',
+        'is_vaccinated',
         'vaccine_1',
         'vaccine_1_date',
         'vaccine_2',
         'vaccine_2_date',
-        'booster_status',
+        'is_boostered',
         'booster_1',
         'booster_1_date',
         'booster_2',
