@@ -1,26 +1,39 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResidentController;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('welcome');
+});
 
-Auth::routes();
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Or
-// Route::group('prefix' => '/resident', function () {
-// });
-Route::prefix('/resident')->group(function () {
-    Route::get('/', [ResidentController::class, 'index'])->name('resident.index');
-    Route::get('/create', [ResidentController::class, 'create'])->name('resident.create');
-    Route::post('/', [ResidentController::class, 'store'])->name('resident.store');
-    Route::get('/{resident}/edit', [ResidentController::class, 'edit'])->whereNumber('id')->name('resident.edit');
-    Route::put('/{resident}', [ResidentController::class, 'update'])->name('resident.update');
-    Route::get('/{resident}', [ResidentController::class, 'show'])->whereNumber('id')->name('resident.show');
-    Route::delete('/{resident}', [ResidentController::class, 'destroy'])->name('resident.destroy');
-})->middleware('auth');
+require __DIR__.'/auth.php';
+
+
+Route::middleware('auth')->group(function () {
+
+    // Profile Page
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    // Resident Page
+    Route::prefix('resident')->group(function () {
+
+        Route::get('/', [ResidentController::class, 'index'])->name('resident.index');
+        Route::get('/create', [ResidentController::class, 'create'])->name('resident.create');
+        Route::get('/{resident}', [ResidentController::class, 'show'])->name('resident.show');
+        Route::post('/', [ResidentController::class, 'store'])->name('resident.store');
+        Route::get('/{resident}/edit', [ResidentController::class, 'edit'])->name('resident.edit');
+        Route::put('/{resident}', [ResidentController::class, 'update'])->name('resident.update');
+        Route::delete('/', [ResidentController::class, 'destroy'])->name('resident.destroy');
+    });
+
+});
