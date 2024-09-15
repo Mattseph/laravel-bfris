@@ -11,8 +11,8 @@ class Voter extends Model
 
     protected $fillable = [
         'resident_id',
+        'voter_number',
         'is_voter',
-        'voter_id',
         'precinct',
     ];
 
