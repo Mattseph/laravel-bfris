@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
 
     // Resident Page
-    Route::prefix('resident')->group(function () {
+    Route::prefix('/resident')->group(function () {
 
         Route::get('/', [ResidentController::class, 'index'])->name('resident.index');
         Route::get('/create', [ResidentController::class, 'create'])->name('resident.create');
@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ResidentController::class, 'store'])->name('resident.store');
         Route::get('/{resident}/edit', [ResidentController::class, 'edit'])->name('resident.edit');
         Route::put('/{resident}', [ResidentController::class, 'update'])->name('resident.update');
-        Route::delete('/', [ResidentController::class, 'destroy'])->name('resident.destroy');
+        Route::delete('/', [ResidentController::class, 'destroy'])->name('resident.destroy')->middleware('password.confirm');
     });
 
 });
