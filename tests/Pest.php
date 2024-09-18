@@ -44,7 +44,9 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function createUser()
+function createUser(string $role='super_admin')
 {
-    return User::factory()->create();
+    return User::factory()->create([
+        'role' => $role
+    ]);
 }
