@@ -2,32 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Voter;
 use App\Models\Resident;
+use App\Models\Disability;
+use App\Models\Vaccination;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
 use Intervention\Image\Image;
+use Illuminate\Validation\Rule;
+use App\Models\EmergencyContact;
+use Illuminate\Support\Benchmark;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreResidentRequest;
 
 class ResidentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $title = "Resident List";
-        $residents = Resident::query()
-            ->orderBy('id', 'desc')
+
+        Gate::authorize('index', Resident::class);
+
+        $residents = Resident::select('resident_id', 'lastname', 'firstname', 'midname', 'suffix', 'image')
+            ->orderBy('resident_id', 'desc')
             ->paginate();
 
-        return view('resident.index', [
-            'residents' => $residents,
-            'title' => $title
-        ]);
+        // dd(Benchmark::measure(fn() => $residents));
+        // dd($residents);
+
+        return view('resident.index', compact('residents'));
     }
 
     /**
@@ -35,25 +43,83 @@ class ResidentController extends Controller
      */
     public function create()
     {
+
+        Resident::authorize('create', Resident::class);
+
         return view('resident.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreResidentRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:residents'],
-            'address' => ['required', 'string'],
-            'nationality' => ['required', 'string', 'max:255'],
-            'image' => ['required', 'image'],
+
+        Gate::authorize('create', Resident::class);
+        // or $request->validated();
+
+        $validated = $request->validated();
+        $resident = Resident::create([
+            'lastname' => $validated->lastname,
+            'firstname' => $validated->firstname,
+            'midname' => $validated->midname,
+            'suffix' => $validated->suffix,
+            'sex' => $validated->sex,
+            'date_of_birth' => $validated->date_of_birth,
+            'place_of_birth' => $validated->place_of_birth,
+            'civil_status' => $validated->civil_status,
+            'nationality' => $validated->nationality,
+            'occupation' => $validated->occupation,
+            'religion' => $validated->religion,
+            'blood_type' => $validated->blood_type,
+            'educational_attainment' => $validated->educational_attainment,
+            'phone_number' => $validated->phone_number,
+            'tel_number' => $validated->tel_number,
+            'email' => $validated->email,
+            'purok' => $validated->purok,
+            'barangay' => $validated->barangay,
+            'city' => $validated->city,
+            'province' => $validated->province,
+            'is_fourps' => $validated->is_fourps,
+            'image' => $validated->image,
+            // 'image' => $validated->image->store('uploads'),
+
         ]);
 
-        $validated['image'] = $request->file('image')->store('uploads'); //First argument is the folder and the second is the storage to be used. php artisan storage:link
+        Disability::create([
+            'resident_id' => $resident->resident_id,
+            'is_disabled' => $validated->is_disabled,
+            'disability_type' => $validated->disability_type,
+        ]);
 
+        Voter::create([
+            'resident_id' => $resident->resident_id,
+            'is_voter' => $validated->is_voter,
+            'voter_number' => $validated->voter_number,
+            'precinct' => $validated->precinct,
+        ]);
 
-        $store = Resident::create($validated);
+        Vaccination::create([
+            'resident_id' => $resident->resident_id,
+            'is_vaccinated' => $validated->is_vaccinated,
+            'vaccine_1' => $validated->vaccine_1,
+            'vaccine_1_date' => $validated->vaccine_1_date,
+            'vaccine_2' => $validated->vaccine_2,
+            'vaccine_2_date' => $validated->vaccine_2_date,
+            'is_boostered' => $validated->is_boostered,
+            'booster_1' => $validated->booster_1,
+            'booster_1_date' => $validated->booster_1_date,
+            'booster_2' => $validated->booster_2,
+            'booster_2_date' => $validated->booster_2_date,
+        ]);
+
+        EmergencyContact::create([
+            'resident_id' => $resident->resident_id,
+            'name' => $validated->name,
+            'relationship' => $validated->relationship,
+            'address' => $validated->address,
+            'contact' => $validated->contact,
+        ]);
 
         return to_route('resident.index')->with('message', 'Resident Created Successfully');
     }
@@ -63,6 +129,8 @@ class ResidentController extends Controller
      */
     public function show(Resident $resident)
     {
+
+        Gate::authorize('view', $resident);
 
         return view('resident.view', [
             'resident' => $resident
@@ -75,6 +143,8 @@ class ResidentController extends Controller
     public function edit(Resident $resident)
     {
 
+        Gate::authorize('update', $resident);
+
         return view('resident.edit', [
             'resident' => $resident
         ]);
@@ -86,16 +156,10 @@ class ResidentController extends Controller
     public function update(Request $request, Resident $resident)
     {
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('residents')->ignore($resident->id)],
-            'address' => ['required', 'string'],
-            'nationality' => ['required', 'string', 'max:255'],
-            'image' => ['sometimes', 'image'],
-        ]);
 
         if ($request->hasFile('image')) {
             File::delete(storage_path('app/public/' . $resident->image));
-            $validated['image'] = $request->file('image')->store('uploads');
+            $validated = $request->file('image')->store('uploads');
         }
 
         $resident->update($validated);
@@ -107,6 +171,8 @@ class ResidentController extends Controller
      */
     public function destroy(Resident $resident)
     {
+        Gate::authorize('delete', $resident);
+
         File::delete(storage_path('app/public/' . $resident->image));
         $resident->delete();
         return to_route('resident.index')->with('message', 'Resident Deleted Successfully');

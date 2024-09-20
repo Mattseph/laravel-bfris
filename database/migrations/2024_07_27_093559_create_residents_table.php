@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('religion');
             $table->string('blood_type')->nullable();
             $table->string('educational_attainment');
-            $table->string('phone_number');
-            $table->string('tel_number')->nullable();
+            $table->string('phone_number')->unique();
+            $table->string('tel_number')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->string('purok');
             $table->string('barangay');

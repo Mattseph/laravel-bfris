@@ -9,6 +9,8 @@ class Resident extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'resident_id';
+
     protected $fillable = [
         'lastname',
         'firstname',
@@ -30,7 +32,8 @@ class Resident extends Model
         'barangay',
         'city',
         'province',
-        'fourps_status',
+        'is_fourps',
+        'is_deceased',
         'date_of_death',
         'image',
     ];

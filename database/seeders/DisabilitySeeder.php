@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Disability;
 use App\Models\Vaccination;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -13,6 +14,6 @@ class DisabilitySeeder extends Seeder
      */
     public function run(): void
     {
-        Vaccination::factory(10)->create();
+        Disability::factory(10)->create();
     }
 }

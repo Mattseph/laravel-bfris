@@ -20,7 +20,7 @@ return new class extends Migration
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
             $table->boolean('is_disabled');
-            $table->string('disability_type');
+            $table->string('disability_type')->nullable()->default(null);
             $table->timestamps();
         });
     }

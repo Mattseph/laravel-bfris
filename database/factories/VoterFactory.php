@@ -24,7 +24,7 @@ class VoterFactory extends Factory
         return [
             'resident_id' => fake()->randomElement($resident_ids),
             'is_voter' => fake()->boolean(),
-            'voter_id' => fake()->randomNumber(9),
+            'voter_number' => fake()->randomNumber(9),
             'precinct' => fake()->randomElement(['4A', '12B', '11A', '11C']),
 
         ];

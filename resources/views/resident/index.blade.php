@@ -1,28 +1,29 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div class="container">
-        <div class="row col-10 mx-auto d-flex flex-column align-items-center" style="border: 1px solid black">
+        <div class="row col-10 mx-auto d-flex flex-column align-items-center" >
             <div class="d-flex flex-row justify-content-between mb-3">
-                <h2>{{ $title }}</h2>
+            <h2>{{ __('Resident List') }}</h2>
                 <a href="{{ route('resident.create') }}" class="btn btn-success text-center">Add New Resident</a>
+                <a href="{{ route('resident.create') }}" id="reverse" class="btn btn-success text-center"></a>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-borderless">
                     <tr class="border-bottom">
                         <th>Name</th>
-                        <th class="text-center" style="border: 1px solid black">Action</th>
+                        <th class="text-center">Action</th>
                     </tr>
                     <tbody>
-                    @foreach ($residents as $resident)
+
+                    @forelse ($residents as $resident)
                         <tr class="border-bottom mx-auto justify-content-between align-items-center">
                             <td class="w-100">
+
                                 @if ($resident->image !== '')
                                     <img src="{{ asset('storage/' .$resident->image) }}" alt="resident-img" width="50px" height="50px" class="rounded-circle">
                                 @endif
 
-                                {{ $resident->name }}
+                                {{ $resident->lastname . ', ' . $resident->firstname . ($resident->midname ? ' ' . $resident->midname : '') . $resident->suffix ? ' ' . $resident->suffix : ''}}
                             </td>
 
                             <td class="w-100 d-flex justify-content-end align-items-center gap-2">
@@ -35,12 +36,15 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                     @empty
+
+                     <tr>No Records Found</tr>
+                    @endforelse
                 </tbody>
                 </table>
             </div>
+            {{ $residents->links() }}
         </div>
-
-        {{ $residents->links() }}
     </div>
-@endsection
+
+</x-app-layout>
