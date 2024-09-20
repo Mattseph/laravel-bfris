@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function() {
     $this->admin = createUser();
-    $this->captain = createUser('captain');
 });
 
 test('Resident Page Can Be Accessed By Authenticated User', function () {
@@ -48,7 +47,7 @@ it('can delete resident profile', function () {
         'auth.password_confirmed_at' => Carbon::now()->timestamp, // Simulate recent password confirmation
     ]);
 
-    $response = $this->actingAs($this->admin)->delete(route('resident.destroy', $resident->id));
+    $response = $this->actingAs($this->captain)->delete('resident/', $resident->toArray());
 
 
     $response->assertStatus(302);
