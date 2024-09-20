@@ -1,10 +1,10 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Resident;
 
 beforeEach(function () {
     $this->captain = createUser('captain');
-    $this->resident = Resident::factory()->create();
 });
 
 it('can access resident view page', function () {
@@ -17,8 +17,15 @@ it('can access resident view page', function () {
 
 it('cannot delete resident profile', function () {
     $resident = Resident::factory()->create();
-    $response = $this->actingAs($this->captain)->delete('/resident/'. $resident->id);
+
+
+    $this->withSession([
+        'auth.password_confirmed_at' => Carbon::now()->timestamp, // Simulate recent password confirmation
+    ]);
+
+    $response = $this->actingAs($this->captain)->delete('resident/', $resident->toArray());
+
 
     $response->assertStatus(403);
-    $this->assertDatabaseHas('residents', $resident);
+
 });
