@@ -14,6 +14,7 @@ use App\Models\EmergencyContact;
 use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreResidentRequest;
 
 class ResidentController extends Controller
@@ -24,6 +25,9 @@ class ResidentController extends Controller
      */
     public function index()
     {
+
+        Gate::authorize('index', Resident::class);
+
         $residents = Resident::select('resident_id', 'lastname', 'firstname', 'midname', 'suffix', 'image')
             ->orderBy('resident_id', 'desc')
             ->paginate();
@@ -31,7 +35,7 @@ class ResidentController extends Controller
         // dd(Benchmark::measure(fn() => $residents));
         // dd($residents);
 
-        return view('resident.index');
+        return view('resident.index', compact('residents'));
     }
 
     /**
@@ -40,7 +44,7 @@ class ResidentController extends Controller
     public function create()
     {
 
-        $this->authorize('create', Resident::class);
+        Resident::authorize('create', Resident::class);
 
         return view('resident.create');
     }
@@ -50,6 +54,8 @@ class ResidentController extends Controller
      */
     public function store(StoreResidentRequest $request)
     {
+
+        Gate::authorize('create', Resident::class);
         // or $request->validated();
 
         $validated = $request->validated();
@@ -124,7 +130,8 @@ class ResidentController extends Controller
     public function show(Resident $resident)
     {
 
-        $this->authorize('view', $resident);
+        Gate::authorize('view', $resident);
+
         return view('resident.view', [
             'resident' => $resident
         ]);
@@ -136,7 +143,7 @@ class ResidentController extends Controller
     public function edit(Resident $resident)
     {
 
-        $this->authorize('update', $resident);
+        Gate::authorize('update', $resident);
 
         return view('resident.edit', [
             'resident' => $resident
@@ -164,6 +171,8 @@ class ResidentController extends Controller
      */
     public function destroy(Resident $resident)
     {
+        Gate::authorize('delete', $resident);
+
         File::delete(storage_path('app/public/' . $resident->image));
         $resident->delete();
         return to_route('resident.index')->with('message', 'Resident Deleted Successfully');
