@@ -27,9 +27,9 @@
                             </td>
 
                             <td class="w-100 d-flex justify-content-end align-items-center gap-2">
-                                <a href="{{ route('resident.edit', ['resident' => $resident->resident_id]) }}" class="btn btn-info d-block">Update</a>
+                                <a href="{{ route('resident.edit', $resident) }}" class="btn btn-info d-block">Update</a>
 
-                                <form action="{{ route('resident.destroy', ['resident' => $resident->resident_id]) }}" method="POST" class="align-items-center">
+                                <form action="{{ route('resident.destroy', $resident) }}" method="POST" class="align-items-center">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger">Delete</button>
