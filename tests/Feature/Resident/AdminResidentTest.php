@@ -6,13 +6,15 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+
 beforeEach(function() {
     $this->admin = createUser();
 });
 
 test('Resident Page Can Be Accessed By Authenticated User', function () {
     $this->actingAs($this->admin)->get('/resident')
-    ->assertStatus(200);
+    ->assertStatus(200)
+    ->assertViewHas('residents'); // The data passed to the index page.
 });
 
 test('Unauthenticated Cannot Access Resident Page', function () {
@@ -47,7 +49,7 @@ it('can delete resident profile', function () {
         'auth.password_confirmed_at' => Carbon::now()->timestamp, // Simulate recent password confirmation
     ]);
 
-    $response = $this->actingAs($this->captain)->delete('resident/', $resident->toArray());
+    $response = $this->actingAs($this->admin)->delete('resident/', $resident->toArray());
 
 
     $response->assertStatus(302);
