@@ -11,11 +11,13 @@ beforeEach(function() {
     $this->admin = createUser();
 });
 
-test('Resident Page Can Be Accessed By Authenticated User', function () {
+it('can Be Accessed By Authenticated User', function (Resident $resident) {
     $this->actingAs($this->admin)->get('/resident')
     ->assertStatus(200)
-    ->assertViewHas('residents'); // The data passed to the index page.
-});
+    ->assertViewHas('residents', function ($residents) use ($resident) {
+        return $residents->contains($resident);
+    }); // The data passed to the index page.
+})->with(fn() => Resident::factory()->create());
 
 test('Unauthenticated Cannot Access Resident Page', function () {
     $this->get('/resident')
